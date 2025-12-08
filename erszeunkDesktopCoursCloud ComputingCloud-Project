@@ -1,0 +1,11 @@
+[33mcommit 857b878c26aaf8d8c8602415a15d4a050175c6fd[m
+Author: Simon Ryvie <simon.becart@student.junia.com>
+Date:   Mon Dec 8 20:25:03 2025 +0100
+
+    remove terraform cache and large files
+
+[33mcommit 61c4cfced00568e5a452d26aebc9d6370dcfabbe[m
+Author: Simon Ryvie <simon.becart@student.junia.com>
+Date:   Mon Dec 8 20:24:00 2025 +0100
+
+    front refait pour les bulles, le fond en bleuet les doc bien mit/ titre en milieu
