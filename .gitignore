@@ -6,9 +6,21 @@ crash.log
 override.tf
 override.tf.json
 .terraform.lock.hcl
+*.tfplan
+terraform.tfvars
 
 # Azure publish profile
 *.PublishSettings
 
 # IDE
 .vscode/
+
+# Python
+__pycache__/
+*.pyc
+
+# Environment Variables
+.env
+
+# Executables
+*.exe
