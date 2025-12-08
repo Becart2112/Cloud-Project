@@ -1,68 +1,280 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: Arial; margin: 20px; }
-        .container { max-width: 800px; margin: 0 auto; }
-        input[type="file"], button { padding: 10px; margin: 10px 0; }
-        #docs { margin-top: 20px; }
-        .doc-item { border: 1px solid #ccc; padding: 10px; margin: 5px 0; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            25% { transform: translateY(-20px) translateX(10px); }
+            50% { transform: translateY(-40px) translateX(-10px); }
+            75% { transform: translateY(-20px) translateX(15px); }
+        }
+        .bubble {
+            animation: float 4s infinite ease-in-out;
+            opacity: 0.6;
+        }
+        .bubble:nth-child(1) { animation-delay: 0s; animation-duration: 4s; }
+        .bubble:nth-child(2) { animation-delay: 0.5s; animation-duration: 5s; }
+        .bubble:nth-child(3) { animation-delay: 1s; animation-duration: 6s; }
+        .bubble:nth-child(4) { animation-delay: 1.5s; animation-duration: 4.5s; }
+        .bubble:nth-child(5) { animation-delay: 2s; animation-duration: 5.5s; }
+        .bubble:nth-child(6) { animation-delay: 2.5s; animation-duration: 6.5s; }
+        .bubble:nth-child(7) { animation-delay: 0.8s; animation-duration: 5.5s; }
+        .bubble:nth-child(8) { animation-delay: 1.2s; animation-duration: 4.8s; }
+        .bubble:nth-child(9) { animation-delay: 1.8s; animation-duration: 6.2s; }
+        .bubble:nth-child(10) { animation-delay: 2.3s; animation-duration: 5.3s; }
+        .bubble:nth-child(11) { animation-delay: 0.3s; animation-duration: 6.8s; }
+        .bubble:nth-child(12) { animation-delay: 1.7s; animation-duration: 5.7s; }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>Document Manager</h1>
-        
-        <div>
-            <h2>Upload Document</h2>
-            <input type="file" id="fileInput">
-            <button onclick="uploadFile()">Upload</button>
-            <p id="status"></p>
+<body class="bg-gradient-to-br from-blue-900 via-slate-900 to-slate-900 min-h-screen">
+    <div class="max-w-5xl mx-auto p-6">
+        <!-- Header - Centered -->
+        <div class="mb-12 text-center">
+            <h1 class="text-5xl font-black text-white mb-3">
+                <i class="fas fa-cloud-upload-alt text-blue-400"></i>
+                Cloud Project BecartSimon
+            </h1>
+            <p class="text-slate-400 text-lg">Management de doc</p>
         </div>
-        
-        <div id="docs">
-            <h2>Documents</h2>
-            <button onclick="loadDocuments()">Refresh</button>
-            <div id="docsList"></div>
+
+        <!-- Main Upload Section -->
+        <div class="mb-8">
+            <div id="dropZone" class="border-4 border-dashed border-blue-400 rounded-2xl p-16 text-center cursor-pointer hover:border-blue-300 hover:bg-blue-500/10 transition-all duration-300 bg-slate-800/50 relative overflow-hidden">
+                <!-- Animated Bubbles -->
+                <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div class="bubble absolute w-20 h-20 bg-blue-400/30 rounded-full" style="left: 5%; top: 10%;"></div>
+                    <div class="bubble absolute w-16 h-16 bg-blue-300/25 rounded-full" style="left: 15%; top: 60%;"></div>
+                    <div class="bubble absolute w-24 h-24 bg-blue-500/20 rounded-full" style="left: 65%; top: 20%;"></div>
+                    <div class="bubble absolute w-14 h-14 bg-blue-400/25 rounded-full" style="left: 85%; top: 65%;"></div>
+                    <div class="bubble absolute w-18 h-18 bg-blue-300/20 rounded-full" style="left: 10%; top: 75%;"></div>
+                    <div class="bubble absolute w-12 h-12 bg-blue-400/30 rounded-full" style="left: 80%; top: 10%;"></div>
+                    <div class="bubble absolute w-16 h-16 bg-blue-300/28 rounded-full" style="left: 35%; top: 5%;"></div>
+                    <div class="bubble absolute w-14 h-14 bg-blue-400/22 rounded-full" style="left: 2%; top: 40%;"></div>
+                    <div class="bubble absolute w-12 h-12 bg-blue-500/25 rounded-full" style="left: 90%; top: 30%;"></div>
+                    <div class="bubble absolute w-20 h-20 bg-blue-300/20 rounded-full" style="left: 45%; top: 70%;"></div>
+                    <div class="bubble absolute w-14 h-14 bg-blue-400/28 rounded-full" style="left: 20%; top: 20%;"></div>
+                    <div class="bubble absolute w-16 h-16 bg-blue-500/22 rounded-full" style="left: 55%; top: 50%;"></div>
+                </div>
+
+                <input type="file" id="fileInput" class="hidden" multiple accept="*">
+                <div class="flex flex-col items-center justify-center relative z-10">
+                    <i class="fas fa-inbox text-6xl text-blue-400 mb-4 animate-bounce"></i>
+                    <p class="text-white font-bold text-2xl mb-2">Drop files here</p>
+                    <p class="text-slate-400 mb-6">or</p>
+                    <button type="button" onclick="document.getElementById('fileInput').click()" class="bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white px-8 py-3 rounded-lg font-semibold transition transform hover:scale-105">
+                        <i class="fas fa-folder-open mr-2"></i>Select Files
+                    </button>
+                </div>
+            </div>
+
+            <!-- Selected Files Preview -->
+            <div id="filesContainer" class="mt-6 hidden">
+                <h3 class="text-white font-semibold text-lg mb-3 flex items-center gap-2">
+                    <i class="fas fa-list text-blue-400"></i>
+                    Files to Upload
+                </h3>
+                <div id="filesList" class="space-y-2 mb-4 max-h-48 overflow-y-auto bg-slate-800/50 rounded-lg p-4 border border-slate-700"></div>
+                
+                <button onclick="uploadAllFiles()" id="uploadAllBtn" class="w-full bg-gradient-to-r from-green-600 to-green-500 hover:from-green-700 hover:to-green-600 text-white font-bold py-4 rounded-lg transition transform hover:scale-105">
+                    <i class="fas fa-rocket mr-2"></i>Upload All Files
+                </button>
+            </div>
+
+            <!-- Upload Progress -->
+            <div id="uploadProgress" class="mt-6 hidden">
+                <div class="w-full bg-slate-700 rounded-full h-2 overflow-hidden">
+                    <div id="progressBar" class="bg-gradient-to-r from-green-500 to-blue-500 h-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+                <p id="progressText" class="text-slate-400 text-sm mt-2 text-center">Uploading...</p>
+            </div>
+        </div>
+
+        <!-- Documents Section -->
+        <div class="bg-slate-800 rounded-2xl shadow-2xl p-8 border border-slate-700">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-3xl font-bold text-white flex items-center gap-3">
+                    <i class="fas fa-file-circle-check text-green-400"></i>
+                    Your Documents
+                </h2>
+                <button onclick="loadDocuments()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg transition">
+                    <i class="fas fa-sync-alt mr-1"></i>Refresh
+                </button>
+            </div>
+
+            <!-- Documents Grid -->
+            <div id="docsList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-center justify-center col-span-full py-12">
+                    <div class="text-slate-400">
+                        <i class="fas fa-spinner fa-spin text-3xl mb-2"></i>
+                        <p>Loading documents...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-12 text-center text-slate-500 text-sm">
+            <p>Cloud Computing Project • Secure Document Management</p>
         </div>
     </div>
 
     <script>
-        async function uploadFile() {
-            const file = document.getElementById('fileInput').files[0];
-            if (!file) return;
-            
-            const formData = new FormData();
-            formData.append('file', file);
-            
-            try {
-                const resp = await fetch('/api/upload', { method: 'POST', body: formData });
-                const data = await resp.json();
-                document.getElementById('status').innerText = data.message || data.error;
-                loadDocuments();
-            } catch (e) {
-                document.getElementById('status').innerText = 'Error: ' + e.message;
-            }
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const filesContainer = document.getElementById('filesContainer');
+        const filesList = document.getElementById('filesList');
+        const uploadAllBtn = document.getElementById('uploadAllBtn');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        let selectedFiles = [];
+
+        // Drag and drop
+        dropZone.addEventListener('dragover', e => {
+            e.preventDefault();
+            dropZone.classList.add('border-blue-300', 'bg-blue-500/10', 'scale-105');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-blue-300', 'bg-blue-500/10', 'scale-105');
+        });
+
+        dropZone.addEventListener('drop', e => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-300', 'bg-blue-500/10', 'scale-105');
+            const files = e.dataTransfer.files;
+            addFiles(files);
+        });
+
+        fileInput.addEventListener('change', () => {
+            addFiles(fileInput.files);
+        });
+
+        function addFiles(files) {
+            selectedFiles = [...selectedFiles, ...Array.from(files)];
+            fileInput.value = '';
+            renderFilesList();
         }
-        
+
+        function renderFilesList() {
+            if (selectedFiles.length === 0) {
+                filesContainer.classList.add('hidden');
+                return;
+            }
+
+            filesContainer.classList.remove('hidden');
+            filesList.innerHTML = selectedFiles.map((file, idx) => `
+                <div class="flex items-center justify-between bg-slate-700/50 p-3 rounded-lg border border-slate-600 hover:bg-slate-700 transition">
+                    <div class="flex items-center gap-3 flex-1">
+                        <i class="fas fa-file text-blue-400"></i>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-white font-semibold truncate">${escapeHtml(file.name)}</p>
+                            <p class="text-slate-400 text-xs">${(file.size / 1024).toFixed(2)} KB</p>
+                        </div>
+                    </div>
+                    <button onclick="removeFile(${idx})" class="text-red-400 hover:text-red-300 transition ml-2">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function removeFile(idx) {
+            selectedFiles.splice(idx, 1);
+            renderFilesList();
+        }
+
+        async function uploadAllFiles() {
+            if (selectedFiles.length === 0) return;
+
+            uploadAllBtn.disabled = true;
+            uploadProgress.classList.remove('hidden');
+            let uploaded = 0;
+
+            for (let i = 0; i < selectedFiles.length; i++) {
+                const file = selectedFiles[i];
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    progressText.textContent = `Uploading ${i + 1}/${selectedFiles.length}: ${file.name}`;
+                    const resp = await fetch('/api/upload', { method: 'POST', body: formData });
+                    
+                    if (resp.ok) {
+                        uploaded++;
+                    }
+                } catch (e) {
+                    console.error('Upload error:', e);
+                }
+                
+                progressBar.style.width = ((uploaded / selectedFiles.length) * 100) + '%';
+            }
+
+            progressText.textContent = '✅ All files uploaded!';
+            progressBar.style.width = '100%';
+            
+            setTimeout(() => {
+                selectedFiles = [];
+                renderFilesList();
+                uploadProgress.classList.add('hidden');
+                uploadAllBtn.disabled = false;
+                loadDocuments();
+            }, 1500);
+        }
+
         async function loadDocuments() {
             try {
                 const resp = await fetch('/api/documents');
                 const docs = await resp.json();
-                const html = docs.map(d => `
-                    <div class="doc-item">
-                        <strong>${d.originalName}</strong><br>
-                        Uploaded: ${new Date(d.uploadDate).toLocaleString()}<br>
-                        Size: ${(d.fileSize / 1024).toFixed(2)} KB
-                    </div>
-                `).join('');
-                document.getElementById('docsList').innerHTML = html || 'No documents';
+
+                if (docs.length === 0) {
+                    document.getElementById('docsList').innerHTML = `
+                        <div class="col-span-full flex flex-col items-center justify-center py-12 text-slate-400">
+                            <i class="fas fa-folder-open text-5xl mb-3 opacity-30"></i>
+                            <p class="text-lg">No documents yet</p>
+                            <p class="text-sm">Start by uploading your first file above</p>
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('docsList').innerHTML = docs.map(d => `
+                        <div class="bg-slate-700/50 hover:bg-slate-700 border border-slate-600 rounded-lg p-5 transition transform hover:scale-105">
+                            <div class="flex items-start gap-4">
+                                <div class="text-3xl text-blue-400">
+                                    <i class="fas fa-file"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-white font-bold truncate">${escapeHtml(d.originalName)}</p>
+                                    <div class="mt-2 space-y-1 text-xs text-slate-400">
+                                        <p>📅 ${new Date(d.uploadDate).toLocaleDateString()}</p>
+                                        <p>💾 ${(d.fileSize / 1024).toFixed(2)} KB</p>
+                                        <p>📝 ${d.mimeType}</p>
+                                        <span class="inline-block mt-2 bg-green-500/20 text-green-400 px-2 py-1 rounded text-xs font-semibold">✓ ${d.status}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
             } catch (e) {
-                document.getElementById('docsList').innerHTML = 'Error loading documents';
+                document.getElementById('docsList').innerHTML = `
+                    <div class="col-span-full text-red-400 text-sm text-center py-8">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        Error loading documents
+                    </div>
+                `;
             }
         }
-        
+
+        function escapeHtml(text) {
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
         loadDocuments();
     </script>
 </body>
