@@ -1,0 +1,14 @@
+# Terraform
+/.terraform/
+/*.tfstate
+/*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+.terraform.lock.hcl
+
+# Azure publish profile
+*.PublishSettings
+
+# IDE
+.vscode/
