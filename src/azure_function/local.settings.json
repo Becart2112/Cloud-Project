@@ -1,8 +1,8 @@
 {
   "IsEncrypted": false,
   "Values": {
-    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=maxprojcloudstorage;AccountKey=h5hQBE1jQOz6sUuF1oXPWN8FvPdYkjM/t+ELzjXYL8a8k7bJ5ZviFf1DVBKvjP6dcFvhFzGkDfIW+AStdLJFlw==;EndpointSuffix=core.windows.net",
+    "AzureWebJobsStorage": "DefaultEndpointsProtocol=https;AccountName=maxprojcloudstorage;AccountKey=CLE_PRIMAIRE_QUE_JAI_DU_ENLEVER;EndpointSuffix=core.windows.net",
     "FUNCTIONS_WORKER_RUNTIME": "python",
-    "AZURE_STORAGE_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=maxprojcloudstorage;AccountKey=h5hQBE1jQOz6sUuF1oXPWN8FvPdYkjM/t+ELzjXYL8a8k7bJ5ZviFf1DVBKvjP6dcFvhFzGkDfIW+AStdLJFlw==;EndpointSuffix=core.windows.net"
+    "AZURE_STORAGE_CONNECTION_STRING": "DefaultEndpointsProtocol=https;AccountName=maxprojcloudstorage;AccountKey=CLE_PRIMAIRE_QUE_JAI_DU_ENLEVER;EndpointSuffix=core.windows.net"
   }
 }
