@@ -1,26 +1,21 @@
-# Terraform
-/.terraform/
-/*.tfstate
-/*.tfstate.*
-crash.log
-override.tf
-override.tf.json
-.terraform.lock.hcl
-*.tfplan
-terraform.tfvars
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+.DS_Store
 
-# Azure publish profile
-*.PublishSettings
+# Azure Functions
+local.settings.json
+.python_packages/
+
+# Terraform
+.terraform/
+*.tfstate*
+*.tfplan
 
 # IDE
 .vscode/
-
-# Python
-__pycache__/
-*.pyc
-
-# Environment Variables
-.env
-
-# Executables
-*.exe
+.idea/

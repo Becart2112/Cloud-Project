@@ -1,0 +1,9 @@
+variable "location" {
+  description = "Azure region"
+  default     = "westeurope"  # ← CHANGE EN westeurope
+}
+
+variable "prefix" {
+  description = "Prefix for resources"
+  default     = "maxprojcloud"
+}
