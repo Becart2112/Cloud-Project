@@ -1,6 +1,6 @@
 variable "location" {
   description = "Azure region"
-  default     = "westeurope"  # ← CHANGE EN westeurope
+  default     = "westeurope"  
 }
 
 variable "prefix" {

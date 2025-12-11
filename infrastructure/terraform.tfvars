@@ -1,1 +1,2 @@
 ﻿prefix = "maxprojcloud"
+location = "eastus"
