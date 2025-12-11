@@ -245,27 +245,30 @@ def create_folder(req: func.HttpRequest) -> func.HttpResponse:
             mimetype="application/json"
         ))
 
-@app.route(route="folders/{folder_id}", methods=["DELETE", "OPTIONS"])
-def delete_folder(req: func.HttpRequest) -> func.HttpResponse:
-    """Delete folder"""
-    if req.method == "OPTIONS":
-        return add_cors_headers(func.HttpResponse("OK", status_code=200))
-    
+@app.route("/api/create-folder", methods=["POST"])
+def create_folder():
+    """Créer un nouveau dossier"""
     try:
-        folder_id = req.route_params.get('folder_id')
-        table_client = get_table_client(FOLDERS_TABLE)
+        data = request.json
+        name = data.get('name')
         
-        table_client.delete_entity('folders', folder_id)
+        if not name:
+            return jsonify({"error": "Folder name required"}), 400
         
-        return add_cors_headers(func.HttpResponse(
-            json.dumps({"message": "Folder deleted"}),
-            status_code=200,
-            mimetype="application/json"
-        ))
+        # Utilise l'UUID comme partition key, mais stocke le NAME
+        folder_entity = TableEntity(
+            PartitionKey="folders",
+            RowKey=str(uuid.uuid4()),  # UUID comme clé unique
+            name=name,  # ✅ Ajoute le NOM du dossier !
+            created_at=datetime.utcnow().isoformat()
+        )
         
+        table_client.upsert_entity(folder_entity)
+        
+        return jsonify({
+            "id": folder_entity['RowKey'],
+            "name": name,  # ✅ Retourne le nom
+            "created_at": folder_entity['created_at']
+        }), 201
     except Exception as e:
-        return add_cors_headers(func.HttpResponse(
-            json.dumps({"error": str(e)}),
-            status_code=500,
-            mimetype="application/json"
-        ))
+        return jsonify({"error": str(e)}), 500
