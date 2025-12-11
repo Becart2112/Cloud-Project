@@ -6,29 +6,25 @@ Application sous azure permettant de stocker des fichiers sur le cloud d'azure, 
 ### Prérequis ###
 - Python 3.10+
 - Azure Functions Core Tools
-- Azure Storage Account existant (nom `maxprojcloudstorage` ou mettre le vôtre)
-- Clé d’accès (connection string) du Storage Account
+- Azure Storage Account existant (nom `maxprojcloudstorage`)
+- Clé d’accès (qui m'a enlecé 1 milliard de commit du au secret de github que j'ai pas réussi à enlever hier) du Storage Account
 
 ### Configuration ###
-1. configurer le local.settings.json avec sa propre clé d'azure
+1. configurer le local.settings.json avec sa propre clé d'azure (du coup ca dépend là, j'ai réussi à laisser la mienne)
 
 2. Installer les dépendances :
-   ```bash
+   
    cd src/azure_function
    pip install -r requirements.txt
-   ```
 
-### Lancement en local ###
-lancer le local !
+### Lancement ###
 
-```bash
 cd src/azure_function
 func start
-```
 
 ### Tests des endpoints (PowerShell) ###
+SI vous voulez tester 
 
-```powershell
 Invoke-RestMethod -Method Post -Uri "http://localhost:7071/api/create-folder" -ContentType 'application/json' -Body '{"name":"Mon dossier"}'
 Invoke-RestMethod -Uri "http://localhost:7071/api/folders"
 
@@ -38,7 +34,7 @@ Set-Content .\test.pdf 'hello'
 curl.exe -X POST "http://localhost:7071/api/upload" -F "file=@test.pdf" -F "folderId=root"
 
 Invoke-RestMethod -Uri "http://localhost:7071/api/documents"
-```
+
 si tout marche bien normalement c'est good !
 
 ### Ressources Cloud utilisées ###
