@@ -19,6 +19,3 @@ local.settings.json
 # IDE
 .vscode/
 .idea/
-
-# Key secrets 
-.local.settings.json

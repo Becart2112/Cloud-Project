@@ -47,6 +47,7 @@ def add_cors_headers(response):
     response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     return response
 
+@app.function_name("HealthCheck")
 @app.route(route="health", methods=["GET"])
 def health_check(req: func.HttpRequest) -> func.HttpResponse:
     """Health check endpoint"""
@@ -72,6 +73,7 @@ def health_check(req: func.HttpRequest) -> func.HttpResponse:
             mimetype="application/json"
         ))
 
+@app.function_name("UploadDocument")
 @app.route(route="upload", methods=["POST", "OPTIONS"])
 def upload_document(req: func.HttpRequest) -> func.HttpResponse:
     """Upload document"""
@@ -130,6 +132,7 @@ def upload_document(req: func.HttpRequest) -> func.HttpResponse:
             mimetype="application/json"
         ))
 
+@app.function_name("ListDocuments")
 @app.route(route="documents", methods=["GET", "OPTIONS"])
 def list_documents(req: func.HttpRequest) -> func.HttpResponse:
     """List documents"""
@@ -169,6 +172,7 @@ def list_documents(req: func.HttpRequest) -> func.HttpResponse:
             mimetype="application/json"
         ))
 
+@app.function_name("ListFolders")
 @app.route(route="folders", methods=["GET", "OPTIONS"])
 def list_folders(req: func.HttpRequest) -> func.HttpResponse:
     """List folders"""
@@ -200,6 +204,7 @@ def list_folders(req: func.HttpRequest) -> func.HttpResponse:
             mimetype="application/json"
         ))
 
+@app.function_name("CreateFolder")
 @app.route(route="create-folder", methods=["POST", "OPTIONS"])
 def create_folder(req: func.HttpRequest) -> func.HttpResponse:
     """Create folder"""
@@ -245,30 +250,28 @@ def create_folder(req: func.HttpRequest) -> func.HttpResponse:
             mimetype="application/json"
         ))
 
-@app.route("/api/create-folder", methods=["POST"])
-def create_folder():
-    """Créer un nouveau dossier"""
+@app.function_name("DeleteFolder")
+@app.route(route="folders/{folder_id}", methods=["DELETE", "OPTIONS"])
+def delete_folder(req: func.HttpRequest) -> func.HttpResponse:
+    """Delete folder"""
+    if req.method == "OPTIONS":
+        return add_cors_headers(func.HttpResponse("OK", status_code=200))
+    
     try:
-        data = request.json
-        name = data.get('name')
+        folder_id = req.route_params.get('folder_id')
+        table_client = get_table_client(FOLDERS_TABLE)
         
-        if not name:
-            return jsonify({"error": "Folder name required"}), 400
+        table_client.delete_entity('folders', folder_id)
         
-        # Utilise l'UUID comme partition key, mais stocke le NAME
-        folder_entity = TableEntity(
-            PartitionKey="folders",
-            RowKey=str(uuid.uuid4()),  # UUID comme clé unique
-            name=name,  # ✅ Ajoute le NOM du dossier !
-            created_at=datetime.utcnow().isoformat()
-        )
+        return add_cors_headers(func.HttpResponse(
+            json.dumps({"message": "Folder deleted"}),
+            status_code=200,
+            mimetype="application/json"
+        ))
         
-        table_client.upsert_entity(folder_entity)
-        
-        return jsonify({
-            "id": folder_entity['RowKey'],
-            "name": name,  # ✅ Retourne le nom
-            "created_at": folder_entity['created_at']
-        }), 201
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return add_cors_headers(func.HttpResponse(
+            json.dumps({"error": str(e)}),
+            status_code=500,
+            mimetype="application/json"
+        ))
