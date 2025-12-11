@@ -30,7 +30,7 @@ provider "azurerm" {
 # Groupe de Ressources
 resource "azurerm_resource_group" "main" {
   name     = "${var.prefix}-rg"
-  location = var.location  # ← UTILISE var.location
+  location = var.location
 }
 
 # le Compte de Stockage
@@ -43,16 +43,16 @@ resource "azurerm_storage_account" "app_storage" {
 }
 
 # Conteneur Blob pour les uploads des documents
-resource "azurerm_storage_container" "input_container" {
-  name                  = "input-documents"
+resource "azurerm_storage_container" "documents" {
+  name                  = "documents"
   storage_account_name  = azurerm_storage_account.app_storage.name
   container_access_type = "private"
 }
 
-# 5. Azure Function App
+# Azure Function App
 resource "azurerm_service_plan" "function_plan" {
   name                = "${var.prefix}-func-plan"
-  location            = var.location  # ← CHANGE eastus EN var.location
+  location            = var.location
   resource_group_name = azurerm_resource_group.main.name
   os_type             = "Linux"
   sku_name            = "Y1"
@@ -60,7 +60,7 @@ resource "azurerm_service_plan" "function_plan" {
 
 resource "azurerm_function_app" "doc_processor" {
   name                       = "${var.prefix}-doc-processor"
-  location                   = var.location  # ← CHANGE eastus EN var.location
+  location                   = var.location
   resource_group_name        = azurerm_resource_group.main.name
   app_service_plan_id        = azurerm_service_plan.function_plan.id
   storage_account_name       = azurerm_storage_account.app_storage.name
@@ -69,13 +69,10 @@ resource "azurerm_function_app" "doc_processor" {
   https_only                 = true
   
   app_settings = {
-    "FUNCTIONS_WORKER_RUNTIME"    = "python"
-    "AzureWebJobsStorage"         = azurerm_storage_account.app_storage.primary_connection_string
-    "DOCUMENT_INPUT_CONTAINER"    = azurerm_storage_container.input_container.name
-    "COSMOS_DB_ENDPOINT"          = azurerm_cosmosdb_account.db.endpoint
-    "COSMOS_DB_MASTER_KEY"        = azurerm_cosmosdb_account.db.primary_key
-    "COSMOS_DB_CONTAINER"         = azurerm_cosmosdb_sql_container.db_container.name
-    "COSMOS_DB_FOLDERS_CONTAINER" = azurerm_cosmosdb_sql_container.folders_container.name
+    "FUNCTIONS_WORKER_RUNTIME"           = "python"
+    "AzureWebJobsStorage"                = azurerm_storage_account.app_storage.primary_connection_string
+    "AZURE_STORAGE_CONNECTION_STRING"    = azurerm_storage_account.app_storage.primary_connection_string
+    "DOCUMENT_CONTAINER"                 = azurerm_storage_container.documents.name
   }
 }
 
